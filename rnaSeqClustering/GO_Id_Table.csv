@@ -1,0 +1,12 @@
+Cluster,GO ID,Description
+Cluster 1,GO:0016126,Sterol Biosynthetic Process
+,GO:0016628 ,Oxidoreductase Activity
+,GO:0051186,Cofactor Metabolic Proces
+Cluster 2,GO:0044283,Small Molecule Biosynthetic Process
+,GO:0070059,Intrinsic Apoptotic Signaling Pathway in Response to Endoplasmic Reticulum Stress
+Cluster 3,GO:0034976,Response to Endoplasmic Reticulum Stress
+Cluster 4,GO:0030017,Sarcomere
+,GO:0055007,Cardiac Muscle Cell Differentiation
+Cluster 5,GO:0006515,Extracellular Space
+Cluster 6,GO:0022900,Electron Transport Chain
+Cluster 7,GO:0000278,Mitotic Cell Cycle
