@@ -1,31 +1,24 @@
-%Pull up eids for cluster 1 for time and dose
-%look at aggregate lists
-%are expression levels the same?
+function buildCrossPlots()
 
-clear;clc
 set(0,'DefaultFigureVisible','on');
 set(0,'defaultfigurecolor',[1 1 1])
 
-%load datasets
-%log2 fold change
-load('../data/sharons_data/erl_de.mat')
-load('../data/sharons_data/lap_de.mat')
-load('../data/sharons_data/sun_de.mat')
-load('../data/sharons_data/sor_de.mat')
-load('../data/sharons_data/ensembleids_de.mat')
+%Load datasets
+load('differentialExpressionData/erl_de.mat')
+load('differentialExpressionData/lap_de.mat')
+load('differentialExpressionData/sun_de.mat')
+load('differentialExpressionData/sor_de.mat')
+load('differentialExpressionData/ensembleids_de.mat')
 
 %Combine datasets into single array
 %Contains expression information for all differentially expressed genes,
 %all condiditions
-X = [erl_de,lap_de,sor_de,sun_de];
+data = [erl_de,lap_de,sor_de,sun_de];
 
 %load indices for ensemble ids for genes of interest
 %These need to be generated for every dataset being plotted
-load('aggregate_time_index.mat')    %These may be wrong
-load('aggregate_dose_index.mat')
-load('allTimeIndex.mat')    %These may be wrong
-load('allDoseIndex.mat')
-
+load('timeClustersIndex.mat')   
+load('doseClustersIndex.mat')
 
 %Cluster indices to plot
 %Already have clusters identified from previous g-means run
@@ -33,15 +26,11 @@ clusters_dose = [2,3,5,16];
 clusters_time = [4,12,16];
 clusters = [2,3,5,16,4,12,16];
 
-%Pull genes from all cluster, using saved index
+%Pull gene expression using saved index
 %Separate out dose and time conditions
-agg_time2 = X(agg_time_index,:)';
-agg_dose2 = X(agg_dose_index,:)';
-agg_time = X(allTimeIndex,:)';
-agg_dose = X(allDoseIndex,:)';
+agg_time = data(timeClustersIndex,:)';
+agg_dose = data(doseClustersIndex,:)';
 agg_dose(:,280) = 0;
-agg_dose2(:,280) = 0;
-% etrans = X(etransIndex,:)';
 
 %Create cell aray with one array for each dose-specified cluster,
 %containing top 20 genes at all 24 conditions
@@ -49,7 +38,7 @@ dose_cell = cell(1,16);
 j = 1;
 for i = 1:16 %missing 8,11
     if i == 8 || i == 11 %don't have goseq gene lists for clusters 8 and 11
-        dose_cell{i} = zeros(24,20);    %Fill with zeros for now
+        dose_cell{i} = zeros(24,20);    %Fill with zeros 
     else
         dose_cell{i} = agg_dose(:,j:j+19);
         j = j+20;
@@ -63,7 +52,7 @@ time_cell = cell(1,16);
 j = 1;
 for i = 1:16 %missing 15
     if i == 15 %don't have goseq gene lists for cluster 15
-        time_cell{i} = zeros(24,20);  %Fill with zeros for now
+        time_cell{i} = zeros(24,20);  %Fill with zeros
     else
         time_cell{i} = agg_time(:,j:j+19);
         j = j+20;
@@ -89,95 +78,15 @@ for i = 1:length(clusters)
     
     %For plotting
     %Create new custom heatmap (blue - beige - orange, 9 colors)
-    %     newmap = [69,117,180;116,173,209;171,217,233;204,233,242;239,233,195;253,205,126;250,157,89;240,101,6;215,48,39];
-    %     newmap = [69,117,180;171,217,233;204,233,242;239,233,195;253,205,126;250,157,89;215,48,39];
-%     newmap = [69,117,180;101 156 200;138,190,218;176,219,234;239, 233, 195;253,213,134;253,178,101;247,134,78;235,90,58];
-%     newmap = newmap./255;
-% 
-%         
-%         newmap = 
-%             [69,117,180
-%             ;116,173,209;
-%             171,217,233;
-%             204,233,242;
-%             239,233,195;
-%             253,205,126
-%             ;250,157,89;
-%             240,101,6
-%             ;215,48,39];
-
-%          [69,117,180
-%         101 156 200
-%         138,190,218
-%         176,219,234
-%         213,237,245 %Probably drop this
-%         239, 233, 195
-%         253,213,134
-%         253,178,101
-%         247,134,78
-%         235,90,58
-
-
-%Back to R script for colors:
-%R hex values:
-% "#4575B4" "#588CBF" "#6BA3CB" "#80B7D6" "#97C9E0" "#AEDAE9" "#C3E5F0" "#D9EFF6" "#E8EDD9" "#F5E5AE" "#FDDA8A" "#FDC577" "#FDB063" "#F99756" "#F67C4A" "#EE623E" "#E24932" "#D73027"
-% 69,117,180
-% 88,140,191
-% 107,163,203
-% 128,183,214
-% 151,201,224
-% 174,218,233
-% 195,229,240
-% 217,239,246
-% 
-% 232,237,217
-% 
-% 245,229,174
-% 253,218,138
-% 253,197,119
-% 253,176,99
-% 249,151,86
-% 246,124,74
-% 238,98,62
-% 226,73,50
-% 215,48,39
-
-
-% 69,117,180
-% 88,140,191
-% % % 107,163,203
-% 128,183,214
-% % % 151,201,224
-% 174,218,233
-
-% 232,237,217 - 239, 233, 195;
-% 
-% 253,197,119
-% % % 253,176,99
-% 249,151,86
-% % % 246,124,74
-% 238,98,62
-% 226,73,50
-% 215,48,39
-
     newmap = [69,117,180;88,140,191;128,183,214;174,218,233;239, 233, 195;249,151,86;238,98,62;226,73,50;215,48,39];
     newmap = newmap./255;
 
-
-
-    %Reduce default heatmap (blue - green - yellow) to 9 colors
-    %Can call custom or default colormap as desired when plotting
-    colormap default
-    cmap = colormap;
-    defmap = cmap(1:7:64,:);
-    defmap = [defmap(1:5,:);defmap(7:end,:)]; %remove 6
-    
     %%%%%%%%%%%%%%%%%
     %%% Erlotinib %%%
     %%%%%%%%%%%%%%%%%
     
     %This can be left alone if number of genes (20) and conditions (6)
-    %remains consistent. Much customize if these change 
+    %remains consistent. Must customize if these change 
     
     %Build array for plotting drug. Inf values will appear as white,
     %matching background. Cross of actual data will be colored
@@ -194,7 +103,6 @@ for i = 1:length(clusters)
    end
    
    %Add row and column of zeros for account for surf bug cutting off a row
-   %and col
    erl_cross_array(end+1,:) = 0;
    erl_cross_array(:,end+1) = 0;
    
@@ -206,14 +114,12 @@ for i = 1:length(clusters)
    subplot(7,4,j);
    
    %Plot cross
-   %Plotting command
    h=surf(erl_cross_array');
    %remove black mesh from plot
    set(h,'edgecolor','none')
    %remove x and y axis
    axis off
    %choose which colormap to use
-%    colormap(defmap)
    colormap(newmap)
    %convert 3d plot to 2d
    view(2)
@@ -244,12 +150,6 @@ for i = 1:length(clusters)
    end
    j=j+1;
     
-   %Save individual crosses if desired
-%    fn1 = 'heatmaps/cluster_';
-%    fn2 = '/erl.png';
-%    filename = [fn1 num2str(clusters(i)) fn2];
-%    print(filename, '-dpng','-r300')
-    
 
     %%%%%%%%%%%%%%%%%
     %%% Lapatinib %%%
@@ -265,7 +165,6 @@ for i = 1:length(clusters)
         lap_cross_array(3,40:60) = 0;    
      
     %Add row and column of zeros for account for surf bug cutting off a row
-    %and col
     lap_cross_array(end+1,:) = 0;
     lap_cross_array(:,end+1) = 0;
     
@@ -277,7 +176,6 @@ for i = 1:length(clusters)
     set(h,'edgecolor','none')
     axis off
     colormap(newmap) %Can choose default or custom colormap
-%     colormap(defmap)
     view(2)
     caxis([-5.265 5.265]); 
     grid off
@@ -305,12 +203,6 @@ for i = 1:length(clusters)
     end
      j=j+1;
     
-     %Save individual crosses if desired
-%     fn1 = 'heatmaps/cluster_';
-%     fn2 = '/lap.png';
-%     filename = [fn1 num2str(clusters(i)) fn2];
-% %     print(filename, '-dpng','-r300');
-
 
     %%%%%%%%%%%%%%%%%
     %%% Sorafenib %%%
@@ -327,7 +219,6 @@ for i = 1:length(clusters)
 
     
     %Add row and column of zeros for account for surf bug cutting off a row
-    %and col
     sor_cross_array(end+1,:) = 0;
     sor_cross_array(:,end+1) = 0;
     
@@ -339,7 +230,6 @@ for i = 1:length(clusters)
     set(h,'edgecolor','none')
     axis off
     colormap(newmap) %Choose default or new colormap
-%     colormap(defmap)
     view(2)
     caxis([-5.265 5.265]); 
     grid off
@@ -367,12 +257,6 @@ for i = 1:length(clusters)
         set(gca,'YLim',[1 61],'YTick',10:20:50,'YTickLabel','')
     end
     j=j+1;
-    
-    %Save individual crosses if desired
-%     fn1 = 'heatmaps/cluster_';
-%     fn2 = '/sor.png';
-%     filename = [fn1 num2str(clusters(i)) fn2];
-%     %     print(filename, '-dpng','-r300')
     
     
     %%%%%%%%%%%%%%%%%
@@ -402,7 +286,6 @@ for i = 1:length(clusters)
     set(h,'edgecolor','none')
     axis off
     colormap(newmap) %Choose default or custom colormap
-%     colormap(defmap)
     view(2)
     caxis([-5.265 5.265]); 
     grid off
@@ -430,11 +313,7 @@ for i = 1:length(clusters)
         set(gca,'YLim',[1 61],'YTick',10:20:50,'YTickLabel','')
     end
     j=j+1
-    %Save individual crosses if desired
-%     fn1 = 'heatmaps/cluster_';
-%     fn2 = '/sun.png';
-%     filename = [fn1 num2str(clusters(i)) fn2];
-% %     print(filename, '-dpng','-r300')
+
 
     %Position color bar for final figure
     hp4 = get(subplot(7,4,20),'Position');
@@ -447,8 +326,7 @@ end
 %Uncomment print command to write to file, will overwrite if there's
 %another file already present with same name
 %Can change file format from svg to png, etc
-fn1 = 'testSVG_seven_clusters_final_default_colormap.svg';
-% print(fn1, '-opengl', '-dsvg','-r600')
-print(fn1, '-Painters', '-dsvg','-r600')
+fn1 = 'crossPlot.svg';
+% print(fn1, '-Painters', '-dsvg','-r600')
 
     
