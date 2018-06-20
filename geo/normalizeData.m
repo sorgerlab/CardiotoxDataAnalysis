@@ -1,13 +1,14 @@
 function [normData] = normalizeData(tkiData,doxData)
 
-
 jointData = [tkiData doxData]; 
 
 %Scale data to mean 0, std 1 
+centeredData = zeros(size(jointData));
 for row = 1:size(jointData,1)
     centeredData(row,:) = jointData(row,:)-nanmean(jointData(row,:));
 end
 
+normData = zeros(size(jointData));
 for row = 1:size(jointData,1)
     normData(row,:) = centeredData(row,:)./nanstd(jointData(row,:));
 end
@@ -21,4 +22,3 @@ for i = 1:size(normData,1)
         normData(i,:) = normData(i,:);
     end
 end
-% normData = normData2;
