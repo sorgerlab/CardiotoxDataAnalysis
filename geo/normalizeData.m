@@ -15,10 +15,4 @@ end
 
 normData(normData==inf)=NaN;
 normData(normData==-inf)=NaN;
-normData(isnan(normData))=0;
-
-for i = 1:size(normData,1)
-    if ~isnan(normData(i,end))
-        normData(i,:) = normData(i,:);
-    end
-end
+normData(any(isnan(normData), 2), :) = [];
