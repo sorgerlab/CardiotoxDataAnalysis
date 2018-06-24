@@ -1,4 +1,4 @@
-function buildCrossPlots()
+% function buildCrossPlots()
 
 set(0,'DefaultFigureVisible','on');
 set(0,'defaultfigurecolor',[1 1 1])
@@ -17,64 +17,81 @@ data = [erl_de,lap_de,sor_de,sun_de];
 
 %load indices for ensemble ids for genes of interest
 %These need to be generated for every dataset being plotted
-load('timeClustersIndex.mat')   
-load('doseClustersIndex.mat')
+% load('timeClustersIndex.mat')   
+% load('doseClustersIndex.mat')
+load('clusterGeneIndex.mat')
+
 
 %Cluster indices to plot
 %Already have clusters identified from previous g-means run
-clusters_dose = [2,3,5,16];
-clusters_time = [4,12,16];
-clusters = [2,3,5,16,4,12,16];
+% clusters_dose = [2,3,5,16];
+% clusters_time = [4,12,16];
+% clusters = [2,3,5,16,4,12,16];
+clusters = 1:13;
 
 %Pull gene expression using saved index
 %Separate out dose and time conditions
-agg_time = data(timeClustersIndex,:)';
-agg_dose = data(doseClustersIndex,:)';
-agg_dose(:,280) = 0;
+% agg_time = data(timeClustersIndex,:)';
+% agg_dose = data(doseClustersIndex,:)';
+% agg_dose(:,280) = 0;
+clusteredData = data(clusterGeneIndex,:)';
 
-%Create cell aray with one array for each dose-specified cluster,
-%containing top 20 genes at all 24 conditions
-dose_cell = cell(1,16);
+
+% 
+% %Create cell aray with one array for each dose-specified cluster,
+% %containing top 20 genes at all 24 conditions
+% dose_cell = cell(1,16);
+% j = 1;
+% for i = 1:16 %missing 8,11
+%     if i == 8 || i == 11 %don't have goseq gene lists for clusters 8 and 11
+%         dose_cell{i} = zeros(24,20);    %Fill with zeros 
+%     else
+%         dose_cell{i} = agg_dose(:,j:j+19);
+%         j = j+20;
+%     end
+% end
+
+data_cell = cell(1,13);
 j = 1;
-for i = 1:16 %missing 8,11
-    if i == 8 || i == 11 %don't have goseq gene lists for clusters 8 and 11
-        dose_cell{i} = zeros(24,20);    %Fill with zeros 
-    else
-        dose_cell{i} = agg_dose(:,j:j+19);
-        j = j+20;
-    end
+for i = 1:13
+    data_cell{i} = clusteredData(:,j:j+19);
+    j = j+20;
 end
 
 
-%Create cell aray with one array for each time-specified cluster,
-%containing top 20 genes at all 24 conditions
-time_cell = cell(1,16);
-j = 1;
-for i = 1:16 %missing 15
-    if i == 15 %don't have goseq gene lists for cluster 15
-        time_cell{i} = zeros(24,20);  %Fill with zeros
-    else
-        time_cell{i} = agg_time(:,j:j+19);
-        j = j+20;
-    end
-end
 
+
+
+% 
+% %Create cell aray with one array for each time-specified cluster,
+% %containing top 20 genes at all 24 conditions
+% time_cell = cell(1,16);
+% j = 1;
+% for i = 1:16 %missing 15
+%     if i == 15 %don't have goseq gene lists for cluster 15
+%         time_cell{i} = zeros(24,20);  %Fill with zeros
+%     else
+%         time_cell{i} = agg_time(:,j:j+19);
+%         j = j+20;
+%     end
+% end
+% 
 
 j=1;
 %loop through 7 identified clusters of interest
 for i = 1:length(clusters)
     %first four clusters from dose, last three from from time
-    if i < 5
-        agg_cell = dose_cell;
-    else
-        agg_cell = time_cell;
-    end
+%     if i < 5
+%         agg_cell = dose_cell;
+%     else
+%         agg_cell = time_cell;
+%     end
         
     %Split out data columns relevant to each drug for individual plotting
-    erl = agg_cell{clusters(i)}(1:6,:);
-    lap = agg_cell{clusters(i)}(7:12,:);
-    sor = agg_cell{clusters(i)}(13:18,:);
-    sun = agg_cell{clusters(i)}(19:24,:);
+    erl = data_cell{clusters(i)}(1:6,:);
+    lap = data_cell{clusters(i)}(7:12,:);
+    sor = data_cell{clusters(i)}(13:18,:);
+    sun = data_cell{clusters(i)}(19:24,:);
     
     %For plotting
     %Create new custom heatmap (blue - beige - orange, 9 colors)
@@ -99,7 +116,7 @@ for i = 1:length(clusters)
      
    %Create new figure object at first cluster. Will be reused for each additional cluster subplots 
    if j == 1
-        figure('Units','centimeters', 'Position', [100, 100, 15.325, 13.031]);
+        figure('Units','centimeters', 'Position', [100, 100, 15.325, 100.031]);
    end
    
    %Add row and column of zeros for account for surf bug cutting off a row
@@ -111,7 +128,7 @@ for i = 1:length(clusters)
    %Removing subplot calls and instead using 'figure' call for every plot
    %will generate a separate plot for each cross
    
-   subplot(7,4,j);
+   subplot(13,4,j);
    
    %Plot cross
    h=surf(erl_cross_array');
@@ -124,7 +141,7 @@ for i = 1:length(clusters)
    %convert 3d plot to 2d
    view(2)
    %set color scale
-   caxis([-4 4]); 
+   caxis([-5.265 5.265]); 
    grid off
    
    %For first cluster (first row) add name of drug as title
@@ -169,7 +186,7 @@ for i = 1:length(clusters)
     lap_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(7,4,j);
+    subplot(13,4,j);
         
     %Plot cross
     h=surf(lap_cross_array');
@@ -223,7 +240,7 @@ for i = 1:length(clusters)
     sor_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(7,4,j);
+    subplot(13,4,j);
 
     %Plot Cross
     h=surf(sor_cross_array');
@@ -279,7 +296,7 @@ for i = 1:length(clusters)
     sun_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(7,4,j);
+    subplot(13,4,j);
  
     %Plot cross
     h=surf(sun_cross_array');
@@ -316,7 +333,7 @@ for i = 1:length(clusters)
 
 
     %Position color bar for final figure
-    hp4 = get(subplot(7,4,20),'Position');
+    hp4 = get(subplot(13,4,30),'Position');
     h=colorbar('Position', [hp4(1)+hp4(3)+0.015  hp4(2)-.175  0.0275  hp4(2)+hp4(3)*2.1]);
     set(h,'Fontname','Arial','FontWeight','Bold','Fontsize',7);
    
@@ -327,6 +344,6 @@ end
 %another file already present with same name
 %Can change file format from svg to png, etc
 fn1 = 'crossPlot.svg';
-% print(fn1, '-Painters', '-dsvg','-r600')
+print(fn1, '-Painters', '-dsvg','-r600')
 
     
