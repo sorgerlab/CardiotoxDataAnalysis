@@ -2,7 +2,8 @@
 #Temp files
 *~
 .~*
-
+*.svg
+%.pdf
 
 potentiallyAdd/
 scratch/
