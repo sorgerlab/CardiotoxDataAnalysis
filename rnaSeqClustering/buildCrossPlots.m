@@ -17,39 +17,20 @@ data = [erl_de,lap_de,sor_de,sun_de];
 
 %load indices for ensemble ids for genes of interest
 %These need to be generated for every dataset being plotted
-% load('timeClustersIndex.mat')   
-% load('doseClustersIndex.mat')
 load('clusterGeneIndex.mat')
 
 
 %Cluster indices to plot
 %Already have clusters identified from previous g-means run
-% clusters_dose = [2,3,5,16];
-% clusters_time = [4,12,16];
-% clusters = [2,3,5,16,4,12,16];
 clusters = 1:13;
 
 %Pull gene expression using saved index
 %Separate out dose and time conditions
-% agg_time = data(timeClustersIndex,:)';
-% agg_dose = data(doseClustersIndex,:)';
-% agg_dose(:,280) = 0;
 clusteredData = data(clusterGeneIndex,:)';
 
-
-% 
-% %Create cell aray with one array for each dose-specified cluster,
-% %containing top 20 genes at all 24 conditions
-% dose_cell = cell(1,16);
-% j = 1;
-% for i = 1:16 %missing 8,11
-%     if i == 8 || i == 11 %don't have goseq gene lists for clusters 8 and 11
-%         dose_cell{i} = zeros(24,20);    %Fill with zeros 
-%     else
-%         dose_cell{i} = agg_dose(:,j:j+19);
-%         j = j+20;
-%     end
-% end
+%Create cell aray with one array for each cluster,
+%containing top 20 genes at all 24 conditions
+% Now using all data, not creating separte cell arrays for dose and time
 
 data_cell = cell(1,13);
 j = 1;
@@ -59,34 +40,10 @@ for i = 1:13
 end
 
 
-
-
-
-% 
-% %Create cell aray with one array for each time-specified cluster,
-% %containing top 20 genes at all 24 conditions
-% time_cell = cell(1,16);
-% j = 1;
-% for i = 1:16 %missing 15
-%     if i == 15 %don't have goseq gene lists for cluster 15
-%         time_cell{i} = zeros(24,20);  %Fill with zeros
-%     else
-%         time_cell{i} = agg_time(:,j:j+19);
-%         j = j+20;
-%     end
-% end
-% 
-
 j=1;
-%loop through 7 identified clusters of interest
+%loop through all identified clusters 
 for i = 1:length(clusters)
-    %first four clusters from dose, last three from from time
-%     if i < 5
-%         agg_cell = dose_cell;
-%     else
-%         agg_cell = time_cell;
-%     end
-        
+
     %Split out data columns relevant to each drug for individual plotting
     erl = data_cell{clusters(i)}(1:6,:);
     lap = data_cell{clusters(i)}(7:12,:);
@@ -95,7 +52,12 @@ for i = 1:length(clusters)
     
     %For plotting
     %Create new custom heatmap (blue - beige - orange, 9 colors)
-    newmap = [69,117,180;88,140,191;128,183,214;174,218,233;239, 233, 195;249,151,86;238,98,62;226,73,50;215,48,39];
+%     newmap = [69,117,180;88,140,191;128,183,214;174,218,233;239, 233, 195;249,151,86;238,98,62;226,73,50;215,48,39];
+%     newmap = newmap./255;
+    
+    %New darker version
+    newmap = [45,90,210;69,117,180;88,140,191;128,183,214;239, 233, 195;238,98,62;226,73,50;215,48,39;240,30,25];
+%     newmap = [69,117,180;96,149,196;125,180,212;157,206,227;239,233,195;250,157,89;245,119,72;231,83,55;215,48,39];
     newmap = newmap./255;
 
     %%%%%%%%%%%%%%%%%
@@ -123,7 +85,7 @@ for i = 1:length(clusters)
    erl_cross_array(end+1,:) = 0;
    erl_cross_array(:,end+1) = 0;
    
-   %Create a subplot for each cross with 4 columns and 7 rows (7 clusters x 4 drugx = 28 subplots)
+   %Create a subplot for each cross with 4 columns and 13 rows (7 clusters x 4 drugx = 52 subplots)
    %This is figure-specific and can be altered for a different layout
    %Removing subplot calls and instead using 'figure' call for every plot
    %will generate a separate plot for each cross
@@ -344,6 +306,6 @@ end
 %another file already present with same name
 %Can change file format from svg to png, etc
 fn1 = 'crossPlot.svg';
-print(fn1, '-Painters', '-dsvg','-r600')
+% print(fn1, '-Painters', '-dsvg','-r600')
 
     
