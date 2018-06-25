@@ -1,6 +1,7 @@
 import glob
 
-
+#Matlab only processes and ouputs the numbers at tail end of ensemble id 
+#Append 'ensg' tag and leading 0's to allow further processing 
 for filename in sorted(glob.iglob('ensembleids/*.csv')):
     #print('%s' % filename)
     newlist = []
