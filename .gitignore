@@ -3,7 +3,8 @@
 *~
 .~*
 *.svg
-%.pdf
+*o
+*.pdf
 
 potentiallyAdd/
 scratch/
