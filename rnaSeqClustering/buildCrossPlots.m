@@ -39,10 +39,15 @@ for i = 1:13
     j = j+20;
 end
 
+%Combine Clusters 2 and 7 because both are enriched for the same GO Term:
+%Mitotic Cell Cycle
+combinedCell = [data_cell{2}(:,1:10) data_cell{7}(:,1:10)];
+data_cell{2} = combinedCell;
+data_cell = [data_cell(1:6) data_cell(8:end)];
 
 j=1;
 %loop through all identified clusters 
-for i = 1:length(clusters)
+for i = 1:12%length(clusters)
 
     %Split out data columns relevant to each drug for individual plotting
     erl = data_cell{clusters(i)}(1:6,:);
@@ -57,7 +62,6 @@ for i = 1:length(clusters)
     
     %New darker version
     newmap = [45,90,210;69,117,180;88,140,191;128,183,214;239, 233, 195;238,98,62;226,73,50;215,48,39;240,30,25];
-%     newmap = [69,117,180;96,149,196;125,180,212;157,206,227;239,233,195;250,157,89;245,119,72;231,83,55;215,48,39];
     newmap = newmap./255;
 
     %%%%%%%%%%%%%%%%%
@@ -90,7 +94,7 @@ for i = 1:length(clusters)
    %Removing subplot calls and instead using 'figure' call for every plot
    %will generate a separate plot for each cross
    
-   subplot(13,4,j);
+   subplot(12,4,j);
    
    %Plot cross
    h=surf(erl_cross_array');
@@ -148,7 +152,7 @@ for i = 1:length(clusters)
     lap_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(13,4,j);
+    subplot(12,4,j);
         
     %Plot cross
     h=surf(lap_cross_array');
@@ -202,7 +206,7 @@ for i = 1:length(clusters)
     sor_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(13,4,j);
+    subplot(12,4,j);
 
     %Plot Cross
     h=surf(sor_cross_array');
@@ -258,7 +262,7 @@ for i = 1:length(clusters)
     sun_cross_array(:,end+1) = 0;
     
     %Create a subplot for each cross (7 clusters x 4 drugx = 28 subplots)
-    subplot(13,4,j);
+    subplot(12,4,j);
  
     %Plot cross
     h=surf(sun_cross_array');
@@ -295,7 +299,7 @@ for i = 1:length(clusters)
 
 
     %Position color bar for final figure
-    hp4 = get(subplot(13,4,30),'Position');
+    hp4 = get(subplot(12,4,30),'Position');
     h=colorbar('Position', [hp4(1)+hp4(3)+0.015  hp4(2)-.175  0.0275  hp4(2)+hp4(3)*2.1]);
     set(h,'Fontname','Arial','FontWeight','Bold','Fontsize',7);
    
@@ -305,7 +309,7 @@ end
 %Uncomment print command to write to file, will overwrite if there's
 %another file already present with same name
 %Can change file format from svg to png, etc
-fn1 = 'crossPlot.svg';
-% print(fn1, '-Painters', '-dsvg','-r600')
+fn1 = 'crossPlot12.svg';
+print(fn1, '-Painters', '-dsvg','-r600')
 
     
