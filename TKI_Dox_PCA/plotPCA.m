@@ -6,21 +6,27 @@ load('tkiData.mat')
 load('colNamesTKIs.mat')
 load('colNamesTKIsDox_subset.mat')
 
+% colNamesTKIsDox_subset(30) = [];
+% doxData(:,end) = [];
+
 %Scale data to mean 0, std 1 
 [normData] = normalizeData(tkiData,doxData);
 normTKIOnly = normData(:,1:24);
 
+% for i = 1:size(normData,2)
+%     figure
+%     histogram(normData(:,i))
+% end
+
 %run PCA on scaled data
 %Using TKI and Dox data sets
-[loadings,scores,latent,tsquared,explained] = pca(normData','numcomponents',2,'Rows','pairwise','Centered',0,'algorithm','eig');
+[loadings,scores,latent,tsquared,explained] = pca(normData','numcomponents',3,'Rows','pairwise','Centered',0,'algorithm','eig');
 pc1 = scores(:,1);
 pc2 = scores(:,2);
+
 pc1Var = explained(1);
 pc2Var = explained(2);
 
-% colors = {[85,98,112]./255,[78,205,196]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
-% colors = {[106,74,60]./255,[233,127,2]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
-% colors = {[0,160,176]./255,[106,74,60]./255,[204,51,63]./255,[235,104,65]./255,[237,201,81]./255};
 %Build custom color scheme
 colors = {[106,74,60]./255,[78,175,196]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
 figure('Units','centimeters', 'Position', [100, 100, 25.325, 23.031]);
@@ -61,9 +67,6 @@ pc2 = scoresTKI(:,2);
 pc1Var = explainedTKI(1);
 pc2Var = explainedTKI(2);
 
-% colors = {[85,98,112]./255,[78,205,196]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
-% colors = {[106,74,60]./255,[233,127,2]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
-% colors = {[0,160,176]./255,[106,74,60]./255,[204,51,63]./255,[235,104,65]./255,[237,201,81]./255};
 %Build custom color scheme
 colors = {[106,74,60]./255,[78,175,196]./255,[199,244,100]./255,[255,107,107]./255,[196,77,88]./255};
 figure('Units','centimeters', 'Position', [100, 100, 25.325, 23.031]);
