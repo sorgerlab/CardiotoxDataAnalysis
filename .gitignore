@@ -10,3 +10,7 @@ potentiallyAdd/
 scratch/
 
 colorCodes.txt
+
+#cycif data
+cellCycleAnalysis/signaling
+cellCycleAnalysis/proteome

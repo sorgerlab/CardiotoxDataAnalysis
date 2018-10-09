@@ -1,0 +1,8 @@
+Plotting the percent of p-Rb positive cells over time in MLC2v positive cells (green), MLC2v negative cells (red) and all cells (blue)
+Gating was done by grouping all DMSO data together and performing k-means clustering with k=2
+Histograms for total population of pRb and MLC2v data are provided, gate set by clustering were at 10.4 for pRb and 11.55 for MLC2v 
+Individual plots are shown for treatment (Sorafenib and DMSO) as well as dose and antibody panel
+
+
+
+
