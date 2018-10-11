@@ -352,15 +352,15 @@ for plate in ['P6','P7','P8']:
         for ab in ['proteome1']:
             df = pd.read_csv('%s/dmso/%s_dmso_ProcessedData%s_%s.csv' % (dose,dose,plate,ab))
             if first == 1:  
-                oct4a = df['Oct4a_Nuc']
+                oct4a = df['a-ACTININ_Cyto']
                 first = 0
             else:
-                oct4a = oct4a.append(df['Oct4a_Nuc'])
+                oct4a = oct4a.append(df['a-ACTININ_Cyto'])
 
 
 hplt=oct4a.hist(bins=25)
 fig = hplt.figure
-fig.savefig(('oct4aHist.png'))
+fig.savefig(('a-ACTININHist.png'))
 
 
 oct4a = oct4a.reset_index()
