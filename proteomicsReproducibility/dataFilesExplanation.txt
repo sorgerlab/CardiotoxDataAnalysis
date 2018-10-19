@@ -1,0 +1,19 @@
+Raw data - 20170317_picked_3sets_combined.csv
+    From Robert, scaled intensities, used in paper
+
+Next File - 20170317_picked_3sets_combined_day3Only_relabeled.csv
+    Removed Day 1
+    Removed uneeded columns (Description,Group ID,D3_R2 Peptides,D1 Peptides,D3_R1 Peptides,Collapsed?)
+    Relabeld column names to drug name and replicate number, based off of 201703_proteomics_meta.xlsx
+
+Next File - 20170317_picked_3sets_combined_day3Only_relabeled_reordered.csv
+    Reordered columns so that drugs are together, Replicates in orfer 1-4
+    Replicates 1,2 are bio replicate 1, replicates 3,4 are bio replicate 2
+
+Next Files - day3_allReplicates.mat 
+    Matlab matrix with all data from 20170317_picked_3sets_combined_day3Only_relabeled_reordered.csv
+    Saved in Matlab, same ordering, no edits
+
+Next Files - replicate_labels.mat
+    Matlab cell aray with Drug/replicate labels
+    Column headings from 20170317_picked_3sets_combined_day3Only_relabeled_reordered.csv
